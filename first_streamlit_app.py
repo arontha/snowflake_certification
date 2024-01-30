@@ -5,11 +5,8 @@ import snowflake.connector
 from urllib.error import URLError
 
 #header
-streamlit.title('Snowflake Badge 2 Title')
-streamlit.header('Snowflake Badge 2 Header')
-streamlit.text('Snowflake Badge 2 Text')
-
-
+streamlit.title('Fruit Exploration')
+streamlit.header('Different things fruit with the FruityVice API')
 
 my_fruit_list = pandas.read_csv("https://uni-lab-files.s3.us-west-2.amazonaws.com/dabw/fruit_macros.txt")
 my_fruit_list = my_fruit_list.set_index('Fruit')
@@ -52,6 +49,7 @@ def get_fruit_load_list():
 if streamlit.button('Get Fruit Load List'):
   my_cnx = snowflake.connector.connect(**streamlit.secrets["snowflake"])
   my_data_rows = get_fruit_load_list()
+  my_cnx.close()
   streamlit.dataframe(my_data_rows)
 
 #allow user to add to fruit list
@@ -64,7 +62,5 @@ add_my_fruit = streamlit.text_input('What fruit would you like to add?')
 if streamlit.button('Add a Fruit to the List'):
   my_cnx = snowflake.connector.connect(**streamlit.secrets["snowflake"])
   back_from_function = insert_row_snowflake(add_my_fruit)
+  my_cnx.close()
   streamlit.text(back_from_function)
-
-#streamlit.text('Thanks for adding ' + add_my_fruit)
-#my_cur.execute("insert into fruit_load_list values ('from streamlit');")
